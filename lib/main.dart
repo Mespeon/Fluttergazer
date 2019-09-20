@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
 import 'package:lovelive/model/sif_model.dart';
 import 'package:lovelive/services/lovelive_services.dart';
 
@@ -21,102 +18,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// The Cards
-// This will be a stateful Widget as it is updated by the API.
-//class CardRoll extends StatefulWidget {
-//  @override
-//  CardRollState createState() => CardRollState();
-//}
-//
-//class CardRollState extends State<CardRoll> {
-//  @override
-//  void initState() {
-//    super.initState();
-//    post =
-//  }
-//}
-
-//class Character {
-//  String name;
-//  String desc;
-//  String cardPhoto;
-//  String cv;
-//
-//  Character({this.name, this.desc, this.cardPhoto, this.cv});
-//}
-//
-//Future<List<Character>> getCharacterData() async {
-//  final response = await http.get('https://marknolledo.pythonanywhere.com/sibyl/ionic/stargazer');
-////  print(response.body);
-//
-//  final responseJson = json.decode(response.body.toString());
-//  print(responseJson);
-//
-//  List characters = json.decode(response.body.toString());
-//  List<Character> characterList = createCharacterList(characters);
-//  return characterList;
-//}
-//
-//List<Character> createCharacterList(List data) {
-//  List<Character> list = new List();
-//
-//  for (int i = 0; i < data.length; i++) {
-//    String name = data[i]['name'];
-//    print(data[i]);
-//    Character char = new Character(name: name);
-//    list.add(char);
-//  }
-//
-//  return list;
-//}
-
-//class Quote {
-//  final List<String> members;
-//
-//  Quote({this.members});
-//
-//  factory Quote.fromJson(Map<String, dynamic> json) {
-//    final dataLength = json['data']['Muse'].length;
-//    print(json['data']['Muse'].length);
-//
-//    return Quote(name: json['data']['Muse'][0]['name']);
-//  }
-//}
-
-class Groups {
-  List<String> muse;
-  List<String> aqours;
-
-  Groups({this.muse, this.aqours});
-
-  factory Groups.fromJson(Map<String, dynamic> json) {
-    return Groups(
-        muse: json['data']['Muse'],
-        aqours: json['data']['Aqours']
-    );
-  }
-}
-
-class Members {
-  Groups name;
-  String desc;
-  String cv;
-  Groups memberData;
-
-  Members({
-    this.name,
-    this.desc,
-    this.cv,
-    this.memberData
-  });
-
-  factory Members.fromJson(Map<String, dynamic> json) {
-    return Members(
-      memberData: Groups.fromJson(json['data']['Muse'])
-    );
-  }
-}
-
 class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -124,35 +25,60 @@ class OnboardingPage extends StatelessWidget {
       body: Center(
         child: FlatButton(
           child: Text('Go to sample API call'),
-          onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder: (context) => RandomGets())); },
+          onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder: (context) => CardListings())); },
         )
       )
     );
   }
 }
 
-class RandomGets extends StatelessWidget {
-//  Future<Groups> getMembers() async {
-//    String url = 'https://marknolledo.pythonanywhere.com/sibyl/ionic/stargazer';
-//    final response = await http.get(url);
-////    print(response.body);
-//
-//    if (response.statusCode == 200) {
-//      return Groups.fromJson(json.decode(response.body));
-//    }
-//    else {
-//      print(Exception);
-//      throw Exception('Failed to load post.');
-//    }
-//  }
+// Stateful Widget for the actual Card List
+class CardList extends StatefulWidget {
+  @override
+  CardListState createState() => CardListState();
+}
 
-  callAPI() {
+// CardListState
+class CardListState extends State<CardList> {
+//  List<String> memberCards = List();
 
-  }
+  @override
+  Widget build(BuildContext context) {
+     return ListView(
+       children: [
+         Center(
+           child: FutureBuilder(
+             future: getMembers(),
+             builder: (context, snapshot) {
+               List<Widget> dataMembers = List<Widget>();
+               if (snapshot.hasData) {
+                 for (var i = 0; i <= snapshot.data.data.muse.length - 1; i++) {
+                   var mem = snapshot.data.data.muse[i].toJson();
+                   print('${mem}');
+                   dataMembers.add(
+                       Text('${mem['name']}' + ' ' + '${mem['voice']}')
+                   );
+                 }
 
-  createCards(muse, aqours) {
+                 return Column(
+                   children: dataMembers
+                 );
+               }
+               else if (snapshot.hasError){
+                 return Text('${snapshot.error}');
+               }
+               return CircularProgressIndicator();
+             }
+           )
+         )
+       ]
+     );
+   }
+}
+
+class CardListings extends StatelessWidget {
+  deserializeData(muse, aqours) {
     List members = new List();
-    Container group = new Container();
 
     for (var m=0; m <= muse.length - 1; m++) {
       var member = muse[m].toJson();
@@ -164,9 +90,14 @@ class RandomGets extends StatelessWidget {
       members.add(member);
     }
 
-    return Container(
-      child:
-        Text(members[0].toString())
+    print('From deserializeData: $members');
+
+    return members;
+  }
+
+  Widget setTextWidgets(List<String> data) {
+    return new Row(children:
+      data.map((member) => new Text(member)).toList()
     );
   }
 
@@ -174,29 +105,16 @@ class RandomGets extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+        title: Text('Members')
       ),
-      body:Center(
-          child: FutureBuilder<Stargazer>(
-              future: getMembers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Center(
-                    child: Container(
-                        child: Column(
-                          children: [
-                        createCards(snapshot.data.data.muse, snapshot.data.data.aqours)
-                          ]
-                        )
-                    ),
-                  );
-                }
-                else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                return CircularProgressIndicator();
-              }
+      body: Column(
+        children: [
+          Expanded(
+              child: Center(
+                  child: CardList()
+              )
           )
+        ]
       )
     );
   }
