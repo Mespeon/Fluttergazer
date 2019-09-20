@@ -1,4 +1,4 @@
-# lovelive
+# Fluttergazer / lovelive
 
 A sample Flutter application mirroring the basic layout of MobileBase.
 
