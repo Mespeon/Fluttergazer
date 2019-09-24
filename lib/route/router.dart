@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lovelive/constants.dart';
+import 'package:fluttergazer/constants.dart';
 
-import 'package:lovelive/main.dart';
-import 'package:lovelive/cards.dart';
-import 'package:lovelive/profile.dart';
-import 'package:lovelive/boilnierplate.dart';
+import 'package:fluttergazer/main.dart';
+import 'package:fluttergazer/cards.dart';
+import 'package:fluttergazer/profile.dart';
+import 'package:fluttergazer/boilnierplate.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,7 +25,20 @@ class Router {
 
       default:
         return MaterialPageRoute(builder: (_) => Scaffold(
-          body: Text('No route specified for this path.')
+          appBar: AppBar(
+            title: Text('Page does not exist'),
+            automaticallyImplyLeading: true,
+          ),
+          body: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.error_outline, color: Colors.pink[400]),
+              Center(
+                child: Text('Route is empty.'),
+              )
+            ],
+          )
         ));
     }
   }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergazer/components/drawer.dart';
 
-import 'package:lovelive/cards.dart';
-import 'package:lovelive/boilnierplate.dart';
-import 'package:lovelive/constants.dart';
-import 'package:lovelive/route/router.dart';
+// Routing
+import 'package:fluttergazer/constants.dart';
+import 'package:fluttergazer/route/router.dart';
 
 void main() => runApp(MyApp());
 
@@ -28,30 +28,48 @@ class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(),
+      drawer: TheDrawer(),
       appBar: AppBar(
-        title: Text('Fluttergazer')
+        title: Text('Fluttergazer', style: TextStyle(color: Colors.pink[400])),
+        elevation: 0.0,
+        backgroundColor: Colors.white10,
+        iconTheme: IconThemeData(color: Colors.pink[400]),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: RaisedButton(
-                child: Text('View LLSIF Members'),
-                onPressed: () { Navigator.pushNamed(context, cardListings); },
-              ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(child: 
+            ListBody(
+              children: <Widget>[
+                Center(child: Icon(Icons.info_outline, color: Colors.pink[200], size: 40.0,)),
+                Center(child: Text('Open the drawer to begin.')),
+              ],
             ),
-            Center(
-              child: RaisedButton(
-                child: Text('View Boilnierplate'),
-                onPressed: () { Navigator.pushNamed(context, boilnierplate); },
-              )
-            )
-          ],
-        )
+            color: Colors.white10
+          )
+        ],
       )
+      // body: Center(
+      //   child: Column(
+      //     mainAxisSize: MainAxisSize.max,
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: <Widget>[
+      //       Center(
+      //         child: RaisedButton(
+      //           child: Text('View LLSIF Members'),
+      //           onPressed: () { Navigator.pushNamed(context, cardListings); },
+      //         ),
+      //       ),
+      //       Center(
+      //         child: RaisedButton(
+      //           child: Text('View Boilnierplate'),
+      //           onPressed: () { Navigator.pushNamed(context, boilnierplate); },
+      //         )
+      //       )
+      //     ],
+      //   )
+      // )
     );
   }
 }

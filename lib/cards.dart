@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lovelive/model/sif_model.dart';
-import 'package:lovelive/services/lovelive_services.dart';
+import 'package:fluttergazer/components/drawer.dart';
+import 'package:fluttergazer/model/sif_model.dart';
+import 'package:fluttergazer/services/lovelive_services.dart';
 import 'package:transparent_image/transparent_image.dart';
-
-import 'package:lovelive/profile.dart';
 
 import 'constants.dart';
 
@@ -142,7 +141,9 @@ class CardListState extends State<CardList> {
               }
             }
             else if (snapshot.hasError) {
-              return Text('No data.');
+              return Center(
+                child: Text('No data.')
+              );
             }
             return LinearProgressIndicator();
           }
@@ -158,6 +159,7 @@ class CardListings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: TheDrawer(),
       appBar: AppBar(
         title: Text('Members'),
         actions: <Widget>[
@@ -166,6 +168,7 @@ class CardListings extends StatelessWidget {
             onPressed: () { print('More on AppBar pressed'); },
           )
         ],
+        automaticallyImplyLeading: true,
       ),
       body: Center(
         child: CardList()
