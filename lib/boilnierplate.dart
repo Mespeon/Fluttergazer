@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttergazer/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttergazer/components/drawer.dart';
 import 'dart:convert';
@@ -16,11 +17,10 @@ class Boilnierplate extends StatelessWidget {
         backgroundColor: Colors.blue[700],
         automaticallyImplyLeading: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          LoginForm()
-        ],
+      body: SafeArea(
+        bottom: true,
+        maintainBottomViewPadding: true,
+        child: LoginForm()
       )
     );
   }
@@ -36,14 +36,16 @@ class LoginFormState extends State<LoginForm> {
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // Context state constructor
   @override
   void initState() {
     super.initState();
 
-    _loginController.addListener(_printLatestValue);
-    _passwordController.addListener(_printLatestValue);
+    // _loginController.addListener(_printLatestValue);
+    // _passwordController.addListener(_printLatestValue);
   }
 
+  // Context state disposal
   @override
   void dispose() {
     _loginController.dispose();
@@ -51,10 +53,10 @@ class LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-  _printLatestValue() {
-    print('Email: ' + _loginController.text);
-    print('Password: ' + _passwordController.text);
-  }
+  // _printLatestValue() {
+  //   print('Email: ' + _loginController.text);
+  //   print('Password: ' + _passwordController.text);
+  // }
 
   Future<void> createAlertDialog(title, message) async {
     return showDialog<void>(
@@ -77,23 +79,25 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        color: Colors.white,
-        margin: EdgeInsets.all(20),
-        elevation: 1.0,
-        child: Form(
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+      children: <Widget>[
+        Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget> [
               Padding(
                 padding: EdgeInsets.all(16),
+                child: Icon(Icons.code, color: Colors.blue[500], size: 50.0)
+              ),
+              Padding(
+                padding: EdgeInsets.all(16),
                 child: TextFormField(
                   controller: _loginController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
                     focusColor: Colors.blue,
                     labelText: 'Email',
                     icon: Icon(Icons.email, color: Colors.grey[400])
@@ -111,8 +115,8 @@ class LoginFormState extends State<LoginForm> {
                 child: TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
-                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
                     focusColor: Colors.blue,
                     labelText: 'Password',
                     icon: Icon(Icons.vpn_key, color: Colors.grey[400])
@@ -129,14 +133,8 @@ class LoginFormState extends State<LoginForm> {
               ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FlatButton(
-                    child: Text('Register'),
-                    onPressed: () { 
-                      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Pushing registration form.'),)); 
-                    },
-                    textColor: Colors.deepPurple[500]
-                  ),
                   RaisedButton(
+                    padding: EdgeInsets.only(left: 50, right: 50),
                     color: Colors.pink[700],
                     textColor: Colors.white,
                     child: Text('Login'),
@@ -166,11 +164,27 @@ class LoginFormState extends State<LoginForm> {
                     },
                   )
                 ],
+              ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Text('No account yet?'),
+                    FlatButton(
+                      child: Text('Register'),
+                      onPressed: () { 
+                        Navigator.pushNamed(context, niergister); 
+                      },
+                      textColor: Colors.deepPurple[500]
+                    ),
+                  ],
+                ),
               )
             ],
           )
         )
-      )
+      ],
     );
   }
 }

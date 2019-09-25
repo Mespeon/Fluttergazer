@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttergazer/constants.dart';
+import 'package:fluttergazer/heroflight.dart';
 
 import 'package:fluttergazer/main.dart';
 import 'package:fluttergazer/cards.dart';
 import 'package:fluttergazer/profile.dart';
 import 'package:fluttergazer/boilnierplate.dart';
+import 'package:fluttergazer/niergister.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -22,6 +24,12 @@ class Router {
 
       case boilnierplate:
         return MaterialPageRoute(builder: (_) => Boilnierplate());
+
+      case niergister:
+        return MaterialPageRoute(builder: (_) => RegisterPage());
+
+      case getstylinHero:
+        return MaterialPageRoute(builder: (_) => HeroFlyer());
 
       default:
         return MaterialPageRoute(builder: (_) => Scaffold(

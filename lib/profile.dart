@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 // Sliver Grids
 // Demo for Slivers
@@ -6,14 +7,19 @@ class ProfilePage extends StatelessWidget {
   final member;
   ProfilePage(this.member);
 
+  final _topHeader = TextStyle(color: Colors.grey[700], fontFamily: 'Roboto', fontSize: 24, fontWeight: FontWeight.w700);
+  final _secondaryHeader = TextStyle(color: Colors.grey[700], fontFamily: 'Roboto', fontSize: 18, fontWeight: FontWeight.w700);
+  final _subHeader = TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.w400, fontSize: 14, color: Colors.grey[500]);
+
+
   @override
   Widget build(BuildContext context) {
     var imageData;
-    if (member['cardPhoto'] == 'https://raw.githubusercontent.com/Mespeon/Sibyl-S2-Backend/master/psychopass/resources/') {
+    if (member['data']['cardPhoto'] == 'https://raw.githubusercontent.com/Mespeon/Sibyl-S2-Backend/master/psychopass/resources/') {
       imageData = 'https://firebasestorage.googleapis.com/v0/b/otonokizaka-3a6d9.appspot.com/o/default.jpg?alt=media&token=b8736d57-e915-41f4-8f68-9ace1496c45e';
     }
     else {
-      imageData = member['cardPhoto'];
+      imageData = member['data']['cardPhoto'];
     }
 
     return Scaffold(
@@ -22,11 +28,10 @@ class ProfilePage extends StatelessWidget {
           SliverAppBar(
             backgroundColor: Colors.pink[500],
             pinned: true,
-            floating: true,
+            floating: false,
             expandedHeight: 200,
-            elevation: 5.0,
+            elevation: 2.0,
             automaticallyImplyLeading: true,
-            title: Text(member['name']),
             flexibleSpace: FlexibleSpaceBar(
               background: AspectRatio(
                 aspectRatio: 1 / 1,
@@ -45,12 +50,71 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
           ),
-          SliverFillRemaining(child: Container(
-            child: Hero(
-              tag: 'thumbnailHero',
-              child: Image.network(imageData)
-            )
-          ),)
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Hero(
+                        tag: member['group'] + member['index'],
+                        child: SizedBox(
+                          width: 130,
+                          height: 130,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.pink,
+                              image: DecorationImage(
+                                image: NetworkImage(imageData),
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center
+                              )
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget> [
+                              Text(member['data']['name'], style: _topHeader),
+                              Text(member['data']['voice'], style: _subHeader)
+                            ]
+                          ),
+                        )
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Description', style: _secondaryHeader),
+                      Divider(thickness: 1.0,),
+                      Text(member['data']['description'])
+                    ],
+                  ),
+                )
+              ]
+            ),
+          ),
+          SliverFillRemaining(
+            child: Container()
+          )
         ],
       )
     );

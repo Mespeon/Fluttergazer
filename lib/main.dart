@@ -39,9 +39,16 @@ class OnboardingPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          
           Container(child: 
             ListBody(
               children: <Widget>[
+                Hero(
+                  tag: 'samplehero',
+                  child: Center(
+                    
+                  )
+                ),
                 Center(child: Icon(Icons.info_outline, color: Colors.pink[200], size: 40.0,)),
                 Center(child: Text('Open the drawer to begin.')),
               ],

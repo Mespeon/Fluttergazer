@@ -33,7 +33,7 @@ class CardListState extends State<CardList> {
     );
   }
 
-  createCards(data) {
+  createCards(data, index, group) {
     var imageData;
     if (data['cardPhoto'] == 'https://raw.githubusercontent.com/Mespeon/Sibyl-S2-Backend/master/psychopass/resources/') {
       imageData = 'https://firebasestorage.googleapis.com/v0/b/otonokizaka-3a6d9.appspot.com/o/default.jpg?alt=media&token=b8736d57-e915-41f4-8f68-9ace1496c45e';
@@ -49,21 +49,24 @@ class CardListState extends State<CardList> {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, memberProfile, arguments: data);
+          Navigator.pushNamed(context, memberProfile, arguments: {'data': data, 'index': index.toString(), 'group': group});
         },
         splashColor: Colors.pink[500].withAlpha(70),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            SizedBox(
-              width: 80,
-              height: 80,
-              child: FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                placeholderScale: 1 / 1,
-                image: '$imageData',
-                fit: BoxFit.cover
-              )
+            Hero(
+              tag: group + index.toString(),
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  placeholderScale: 1 / 1,
+                  image: '$imageData',
+                  fit: BoxFit.cover
+                )
+              ),
             ),
             Expanded(
               child: Column(
@@ -115,7 +118,7 @@ class CardListState extends State<CardList> {
                   dataMembers.add(createHeader('Muse'));
                 }
 
-                dataMembers.add(createCards(data));
+                dataMembers.add(createCards(data, i, 'muse'));
               });
 
               // Add Aqours
@@ -125,7 +128,7 @@ class CardListState extends State<CardList> {
                   dataMembers.add(createHeader('Aqours'));
                 }
 
-                dataMembers.add(createCards(data));
+                dataMembers.add(createCards(data, i, 'aqours'));
               });
 
               if (dataMembers.length == 0) {
